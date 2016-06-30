@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menuMore"
+        android:title="추가메뉴"
+        android:icon="@android:drawable/ic_menu_more">
+        <menu>
+            <item
+                android:id="@+id/menuCreate"
+                android:title="대화방생성"
+                />
+            <item
+                android:id="@+id/menuAdd"
+                android:title="대화상대초대"
+                />
+        </menu>
+    </item>>
+</menu>
