@@ -14,7 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by student on 2016-06-29.
+ * AsyncTask를 이용하여 REST GET콜을 통한 JSON을 얻어오는 클래스.
  */
 public class GetBear {
 
@@ -23,9 +23,11 @@ public class GetBear {
     }
 
     public void getBear(String id){
+        // inner class로 구현한 GetTask 객체를 통해 REST API콜
         new GetTask().execute("http://70.12.108.133:8080/api/bears/"+id);
     }
 
+    // AsyncTask를 inner class로 구현
     private class GetTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
@@ -64,7 +66,6 @@ public class GetBear {
 
             // convert inputStream into json
             returnString = convertInputStreamToString(inputStream, length);
-
             JSONObject json = new JSONObject(returnString);
 
             Log.d("REST GET", "The response is : " + json.toString());

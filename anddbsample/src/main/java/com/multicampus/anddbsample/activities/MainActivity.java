@@ -7,6 +7,8 @@ import android.widget.Button;
 
 import com.multicampus.anddbsample.R;
 import com.multicampus.anddbsample.restIF.GetBear;
+import com.multicampus.anddbsample.restIF.PostBear;
+import com.multicampus.anddbsample.vo.Bear;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnList;
 
     GetBear getBear = new GetBear();
+    PostBear postBear = new PostBear();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                getBear.getBear("57721c47f6e30e3c05000001");
+                postBear.postBear(new Bear("AI-BaoBao"));
             }
         });
     }
