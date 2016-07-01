@@ -12,6 +12,17 @@ public class TodoItem implements Serializable{
     private boolean complete;
     private boolean important;
 
+    @Override
+    public String toString() {
+        return "TodoItem{" +
+                "todoId=" + todoId +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", complete=" + complete +
+                ", important=" + important +
+                '}';
+    }
+
     public TodoItem(int todoId, String title, String content) {
         this(todoId, title, content, false, false);
     }

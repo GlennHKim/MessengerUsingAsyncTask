@@ -22,7 +22,8 @@
         <activity android:name=".ch05.RelativeLayoutActivity" />
         <activity android:name=".ch05.FrameLayoutActivity" />
         <activity android:name=".ch05.GridLayoutActivity" />
-        <activity android:name=".ch07.CustomViewActivity"></activity>
+        <activity android:name=".ch07.CustomViewActivity" />
+        <activity android:name=".ch17.IntentTestActivity"></activity>
     </application>
 
 </manifest>

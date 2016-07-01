@@ -3,6 +3,7 @@ package com.multicampus.todoapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -152,12 +153,18 @@ public class ItemListActivity extends AppCompatActivity {
         item.setComplete(complete);
 
         // TODO: 2016-06-30 DB 상태값 변경
+        DBHandler handler = DBHandler.open(this);
+        handler.updateComplete(item.getTodoId(), complete);
+        handler.close();
     }
 
     private void removeItem(TodoItem item){
         data.remove(item);
 
         // TODO: 2016-06-30 DB 에서 삭제
+        DBHandler handler = DBHandler.open(this);
+        handler.delete(item.getTodoId());
+        handler.close();
     }
 
     @Override
@@ -206,7 +213,8 @@ public class ItemListActivity extends AppCompatActivity {
     }
 
     private void makeTodoList4(){
-        data = getData4();
+        //data = getData4();
+        data = getDataFromDB();
 
         TodoItemAdapter adapter = new TodoItemAdapter(
                 this, data, R.layout.list_todo_item
@@ -251,6 +259,29 @@ public class ItemListActivity extends AppCompatActivity {
         item.put("content", "메일보내기 aaa@bbb.ccc 전화 010-1234-1234 쇼핑 http://www.gmarket.co.kr");
 
         list.add(item);
+
+        return list;
+    }
+
+    private ArrayList<TodoItem> getDataFromDB(){
+        ArrayList<TodoItem> list = new ArrayList<>();
+
+        DBHandler handler = DBHandler.open(this);
+
+        Cursor cursor = handler.selectAll();
+
+        while(cursor.moveToNext()){
+            int todoId = cursor.getInt(cursor.getColumnIndex("_id"));
+            String title = cursor.getString(cursor.getColumnIndex("title"));
+            String content = cursor.getString(cursor.getColumnIndex("content"));
+            boolean important = cursor.getInt(cursor.getColumnIndex("important")) == 1 ? true : false;
+            boolean complete = cursor.getInt(cursor.getColumnIndex("complete")) == 1 ? true : false;
+
+            TodoItem item = new TodoItem(todoId, title, content, important, complete);
+            list.add(item);
+        }
+
+        handler.close();
 
         return list;
     }

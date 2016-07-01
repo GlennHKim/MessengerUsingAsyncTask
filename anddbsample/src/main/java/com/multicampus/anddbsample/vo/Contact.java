@@ -1,9 +1,11 @@
 package com.multicampus.anddbsample.vo;
 
+import java.io.Serializable;
+
 /**
  * Created by student on 2016-06-28.
  */
-public class Contact {
+public class Contact implements Serializable{
     // table name
     public static final String TABLE = "Contact";
 

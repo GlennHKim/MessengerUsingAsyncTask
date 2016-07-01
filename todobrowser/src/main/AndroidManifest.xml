@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.multicampus.todobrowser">
+
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- 인텐트 필터 참고 https://developer.android.com/guide/components/intents-filters.html -->
+            <!-- <action> 필터를 0개 이상 선언할 수 있으며 발생한 인텐트에 지정된 액션과 일치하는게 하나 있으면 된다. -->
+            <!-- <category> 필터를 0개 이상 선언할 수 있으며 발생한 인텐트에 지정된 모든 카테고리와 일치해야 한다.
+                    (인텐트에 지정한 카테고리보다 더 많은 카테고리를 선언해도 상관 없다.) -->
+            <!-- 안드로이드는 모든 암시적 인텐트에 CATEGORY_DEFAULT를 적용하므로 암시적 인텐트를 수신하기 위해서는 CATEGORY_DEFAULT가 반드시 지정되어야 한다. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"></action>
+                <action android:name="android.intent.action.CALL"></action>
+                <action android:name="android.intent.action.SEND"></action>
+
+                <category android:name="android.intent.category.BROWSABLE"></category>
+                <category android:name="android.intent.category.DEFAULT"></category>
+
+                <data android:scheme="http"></data>
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/anddbsample/anddbsample.iml" filepath="$PROJECT_DIR$/anddbsample/anddbsample.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/todoapp/todoapp.iml" filepath="$PROJECT_DIR$/todoapp/todoapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/todobrowser/todobrowser.iml" filepath="$PROJECT_DIR$/todobrowser/todobrowser.iml" />
     </modules>
   </component>
 </project>

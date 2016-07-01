@@ -13,8 +13,6 @@ import com.multicampus.anddbsample.R;
 import com.multicampus.anddbsample.restIF.ContactInterface;
 import com.multicampus.anddbsample.vo.Contact;
 
-import java.util.List;
-
 public class LoginActivity extends AppCompatActivity {
 
     Button btnLogin;
@@ -22,6 +20,8 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText editId;
     EditText editName;
+
+    Contact me;
 
     ContactInterface contactIf;
 
@@ -61,15 +61,17 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void loginSuccess(){
+    public void loginSuccess(final Contact me){
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-
+        this.me = me;
+        final Contact contact = new Contact(me.getId(), me.getName(), me.getTelNum(), me.getDesc(), me.getAddress());
         dialog.setTitle(R.string.msg_title_login_success)
                 .setMessage(R.string.msg_content_login_success)
                 .setPositiveButton(R.string.btn_confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(LoginActivity.this, ListActivity.class);
+                        intent.putExtra("me", contact);
                         startActivity(intent);
                     }
                 });

@@ -14,14 +14,14 @@ import java.util.ArrayList;
 /**
  * Created by student on 2016-06-29.
  */
-public class DialogItemAdapter extends BaseAdapter {
+public class ContactItemAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<DialogItem> data;
+    private ArrayList<ContactItem> data;
     private int layoutId;
     private LayoutInflater inflater;
 
-    public DialogItemAdapter(Context context, ArrayList<DialogItem> data, int layoutId) {
+    public ContactItemAdapter(Context context, ArrayList<ContactItem> data, int layoutId) {
         this.context = context;
         this.data = data;
         this.layoutId = layoutId;
@@ -34,13 +34,13 @@ public class DialogItemAdapter extends BaseAdapter {
     }
 
     @Override
-    public DialogItem getItem(int position) {
+    public ContactItem getItem(int position) {
         return data.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return (long)data.get(position).getTodoId();
+        return position;
     }
 
     @Override
@@ -53,12 +53,10 @@ public class DialogItemAdapter extends BaseAdapter {
         TitleTextView title = (TitleTextView)convertView.findViewById(R.id.titleTxt);
         TextView content = (TextView)convertView.findViewById(R.id.contentTxt);
 
-        DialogItem item = getItem(position);
+        ContactItem item = getItem(position);
 
-        title.setText(item.getTitle());
-        content.setText(item.getContent());
-
-        title.setComplete(item.isComplete());
+        title.setText(item.getContact().getId());
+        content.setText(item.getContact().getName());
 
         return convertView;
     }

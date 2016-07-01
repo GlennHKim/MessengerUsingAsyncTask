@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/anddbsample" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/todoapp" />
+            <option value="$PROJECT_DIR$/todobrowser" />
           </set>
         </option>
         <option name="myModules">
@@ -20,6 +21,7 @@
             <option value="$PROJECT_DIR$/anddbsample" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/todoapp" />
+            <option value="$PROJECT_DIR$/todobrowser" />
           </set>
         </option>
       </GradleProjectSettings>

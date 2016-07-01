@@ -14,8 +14,10 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.multicampus.anddbsample.R;
-import com.multicampus.anddbsample.view.DialogItem;
-import com.multicampus.anddbsample.view.DialogItemAdapter;
+import com.multicampus.anddbsample.restIF.ContactInterface;
+import com.multicampus.anddbsample.view.ContactItem;
+import com.multicampus.anddbsample.view.ContactItemAdapter;
+import com.multicampus.anddbsample.vo.Contact;
 
 import java.util.ArrayList;
 
@@ -24,7 +26,11 @@ public class ListActivity extends AppCompatActivity {
     public static final int MENU_MAKE_COMPLETE = 0;
     public static final int MENU_CANCEL_COMPLETE = 1;
 
-    ArrayList<DialogItem> data;
+    Contact me;
+
+    ContactInterface contactIf;
+
+    ArrayList<ContactItem> data;
     private ListView listView;
     private int contextTargetPosition;  // list 내 어떤 항목의 context menu가 선택 되었는지
 
@@ -33,9 +39,16 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+        contactIf = new ContactInterface(this);
+
+        Intent intent = getIntent();
+        me = (Contact)intent.getSerializableExtra("me");
+
         setView();
         setEvent();
         init();
+
+        contactIf.getContactList();
     }
 
     @Override
@@ -73,12 +86,18 @@ public class ListActivity extends AppCompatActivity {
 
     private void setEvent(){
         registerForContextMenu(listView);
+
+        final Contact myContact = new Contact(me.getId(), me.getName(), me.getTelNum(), me.getDesc(), me.getAddress());
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DialogItem item = data.get(position);
+                ContactItem item = data.get(position);
                 Intent intent = new Intent(ListActivity.this, DialogActivity.class);
                 intent.putExtra("item", item);
+                intent.putExtra("me", myContact);
+                intent.putExtra("another", data.get(position).getContact());
+
                 startActivity(intent);
             }
         });
@@ -92,17 +111,9 @@ public class ListActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         super.onContextItemSelected(item);
 
-        DialogItem dialogItem = data.get(contextTargetPosition);
+        ContactItem dialogItem = data.get(contextTargetPosition);
 
         switch(item.getItemId()){
-            case MENU_MAKE_COMPLETE:
-                Log.d(this.getClass().getSimpleName(), "완료 메뉴 선택");
-                completeItem(dialogItem, true);
-                break;
-            case MENU_CANCEL_COMPLETE:
-                Log.d(this.getClass().getSimpleName(), "완료 취소 메뉴 선택");
-                completeItem(dialogItem, false);
-                break;
             case R.id.deleteMenu:
                 Log.d(this.getClass().getSimpleName(), "삭제 메뉴 선택");
                 removeItem(dialogItem);
@@ -115,13 +126,7 @@ public class ListActivity extends AppCompatActivity {
         return true;
     }
 
-    private void completeItem(DialogItem item, boolean complete){
-        item.setComplete(complete);
-
-        // TODO: 2016-06-30 DB 상태값 변경
-    }
-
-    private void removeItem(DialogItem item){
+    private void removeItem(ContactItem item){
         data.remove(item);
 
         // TODO: 2016-06-30 DB 에서 삭제
@@ -138,13 +143,7 @@ public class ListActivity extends AppCompatActivity {
 
         contextTargetPosition = info.position;
 
-        DialogItem item = data.get(contextTargetPosition);
-
-        if(item.isComplete()){
-            menu.add(0,MENU_CANCEL_COMPLETE,0,R.string.cancel_complete);
-        }else{
-            menu.add(0,MENU_MAKE_COMPLETE,0,R.string.complete);
-        }
+        ContactItem item = data.get(contextTargetPosition);
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.context_item_list, menu);
@@ -153,7 +152,7 @@ public class ListActivity extends AppCompatActivity {
     private void makeTodoList4(){
         data = getData4();
 
-        DialogItemAdapter adapter = new DialogItemAdapter(
+        ContactItemAdapter adapter = new ContactItemAdapter(
                 this, data, R.layout.list_dialog_item
         );
 
@@ -161,18 +160,36 @@ public class ListActivity extends AppCompatActivity {
     }
 
     /**
-     * TodoItem으로 구성된 ArrayList 반환
+     * ContactItem으로 구성된 ArrayList 반환
+     *
      * @return
      */
-    private ArrayList<DialogItem> getData4(){
-        ArrayList<DialogItem> list = new ArrayList<>();
+    private ArrayList<ContactItem> getData4() {
+        ArrayList<ContactItem> list = new ArrayList<>();
 
-        DialogItem item = new DialogItem(101, "111샘플 데이터", "이 항목은 샘플로 제공되는 항목입니다. 삭제하고 쓰세요.");
-        list.add(item);
+        Contact c1 = new Contact("kimgon15", "김현곤", "010-231-1233", "나이소", "서울 신동아 아파트");
+        Contact c2 = new Contact("pjs8602", "진슈우", "010-231-1233", "나이소", "서울 신동아 아파트");
 
-        item = new DialogItem(102, "이번달에 할일", "메일보내기 aaa@bbb.ccc 전화 010-1234-1234 쇼핑 http://www.gmarket.co.kr");
-        list.add(item);
+        list.add(new ContactItem(c1));
+        list.add(new ContactItem(c2));
 
         return list;
+    }
+
+    public void getSuccss(ArrayList<Contact> contacts){
+        data.clear();
+
+        for (Contact contact : contacts){
+            data.add(new ContactItem(contact));
+        }
+
+        // dataset이 바뀌었으니 list화면을 바꿔야 한다고 알려줌
+        ((BaseAdapter)listView.getAdapter()).notifyDataSetChanged();
+    }
+
+    public void sendSuccess() {
+    }
+
+    public void sendFailure() {
     }
 }

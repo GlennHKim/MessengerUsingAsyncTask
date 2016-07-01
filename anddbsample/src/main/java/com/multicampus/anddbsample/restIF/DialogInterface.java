@@ -5,10 +5,10 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.multicampus.anddbsample.R;
+import com.multicampus.anddbsample.activities.DialogActivity;
 import com.multicampus.anddbsample.activities.ListActivity;
-import com.multicampus.anddbsample.activities.LoginActivity;
-import com.multicampus.anddbsample.activities.MainActivity;
 import com.multicampus.anddbsample.vo.Contact;
+import com.multicampus.anddbsample.vo.Dialog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,75 +26,39 @@ import java.util.ArrayList;
 /**
  * Created by student on 2016-06-30.
  */
-public class ContactInterface {
+public class DialogInterface {
 
     public static final String REST_METHOD_GET = "GET";
     public static final String REST_METHOD_POST = "POST";
-    public static final String REST_METHOD_DELETE = "DELETE";
-    public static final String REST_METHOD_PUT = "PUT";
-    public static final String REST_API_URL = "http://70.12.108.133:8080/api/contact";
+    public static final String REST_API_URL = "http://70.12.108.133:8080/api/dialog/";
 
-    private static final int NEXT_ACTION_LOGIN = 1;
-    private static final int NEXT_ACTION_FIND = 2;
-    private static final int NEXT_ACTION_UPDATE = 3;
-    private static final int NEXT_ACTION_JOIN = 4;
-
-
-    ArrayList<Contact> contactList;
+    private static final int NEXT_ACTION_DIALOG = 1;
+    private static final int NEXT_ACTION_LIST = 2;
 
     Context context;
     Contact contact;
+    Contact another;
+    Dialog dialog;
+
+    ArrayList<Dialog> dialogList;
 
     int nextStep;
 
-    public ContactInterface(Context context){
-        contactList = new ArrayList<>();
+    public DialogInterface(Context context, Contact contact){
         this.context = context;
-    }
-
-    public void getContact(){
-        new GetTask().execute(REST_API_URL);
-    }
-
-    public void getContact(String id){
-
-    }
-
-    public void deleteContact(String id){
-
-    }
-
-    public void updateContact(Contact contact){
-
-    }
-
-    public void getContactList(){
-        new GetContacts().execute(REST_API_URL);
-    }
-
-    public void Join(Contact contact){
         this.contact = contact;
-        nextStep = NEXT_ACTION_JOIN;
-        new PostTask().execute(REST_API_URL);
+        dialogList = new ArrayList<>();
     }
 
-    public void Login(Contact contact){
-        this.contact = contact;
-        nextStep = NEXT_ACTION_LOGIN;
-        new GetTask().execute(REST_API_URL + "/" + contact.getId());
+    public void getDialogs(Contact another){
+        this.another = another;
+        nextStep = NEXT_ACTION_DIALOG;
+        new GetTask().execute(REST_API_URL + contact.getId() + "/" + another.getId());
     }
 
-    private class GetContacts extends AsyncTask<String, Void, String>{
-
-        @Override
-        protected String doInBackground(String... params) {
-            try{
-                Log.d("REST GetContacts URL", params[0]);
-                return GETContacts(params[0]);
-            }catch (IOException e){
-                return "Unable to retreive data. URL may be invalid.";
-            }
-        }
+    public void sendDialog(Dialog dialog){
+        this.dialog = dialog;
+        new PostTask().execute(REST_API_URL + contact.getId());
     }
 
     private class PostTask extends AsyncTask<String, Void, String>{
@@ -127,23 +91,19 @@ public class ContactInterface {
             // TODO: 2016-06-30 성공 시 할 작업
             Log.d("REST POST", "onPostExecute : " + result);
             switch(nextStep){
-                case NEXT_ACTION_FIND:
-                    break;
-                case NEXT_ACTION_JOIN:
-                    MainActivity mainActivity = (MainActivity) context;
+                case NEXT_ACTION_LIST:
+                    ListActivity listActivity = (ListActivity) context;
                     if(result == "success")
-                        mainActivity.joinSuccess();
+                        listActivity.sendSuccess();
                     else
-                        mainActivity.joinFailure();
+                        listActivity.sendFailure();
                     break;
-                case NEXT_ACTION_LOGIN:
-                    LoginActivity loginActivity = (LoginActivity) context;
+                case NEXT_ACTION_DIALOG:
+                    DialogActivity dialogActivity = (DialogActivity) context;
                     if(result == "success")
-                        loginActivity.loginSuccess(contact);
+                        dialogActivity.getSuccess(dialogList);
                     else
-                        loginActivity.loginFailure();
-                    break;
-                case NEXT_ACTION_UPDATE:
+                        dialogActivity.sendFailure();
                     break;
             }
 
@@ -167,11 +127,10 @@ public class ContactInterface {
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             conn.connect();
 
-            json.accumulate(Contact.KEY_NAME, contact.getName());
-            json.accumulate(Contact.KEY_ID, contact.getId());
-            json.accumulate(Contact.KEY_ADDRESS, contact.getAddress());
-            json.accumulate(Contact.KEY_DESC, contact.getDesc());
-            json.accumulate(Contact.KEY_TELNUM, contact.getTelNum());
+            json.accumulate(Dialog.KEY_SENDER, dialog.getSender());
+            json.accumulate(Dialog.KEY_RECEIVER, dialog.getReceiver());
+            json.accumulate(Dialog.KEY_TEXT, dialog.getText());
+            json.accumulate(Dialog.KEY_TIME, dialog.getTime());
 
             OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
             writer.write(json.toString());
@@ -196,44 +155,7 @@ public class ContactInterface {
     private String GET(String myurl) throws IOException{
         InputStream is = null;
         String returnString = "";
-        int length = 100000;
-
-        try{
-            URL url = new URL(myurl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(R.integer.httpTimeOut);
-            conn.setConnectTimeout(R.integer.httpTimeOut);
-            conn.setRequestMethod(REST_METHOD_GET);
-            conn.setDoInput(true);
-            conn.connect();
-
-            int response = conn.getResponseCode();
-            is = conn.getInputStream();
-
-            returnString = convertInputStreamToString(is, length);
-            JSONObject json = new JSONObject(returnString);
-
-            Log.d("REST POST", "The response is : " + response);
-            Log.d("REST POST", "Data is : " + json.toString());
-
-            if(response == 200){
-                this.contact = new Contact(json.getString(Contact.KEY_ID), json.getString(Contact.KEY_NAME), json.getString(Contact.KEY_TELNUM), json.getString(Contact.KEY_DESC), json.getString(Contact.KEY_ADDRESS));
-                returnString = "success";
-            }
-
-        }catch (Exception e){
-            Log.e("REST GET", "Error : "+e.getMessage());
-        }finally {
-            if(is != null)
-                is.close();
-        }
-        return returnString;
-    }
-
-    private String GETContacts(String myurl) throws IOException{
-        InputStream is = null;
-        String returnString = "";
-        int length = 100000;
+        int length = 10000;
 
         try{
             URL url = new URL(myurl);
@@ -251,26 +173,24 @@ public class ContactInterface {
 
             JSONArray jsonArray = new JSONArray(returnString);
 
-            contactList.clear();
+            dialogList.clear();
 
             int jsonlength = jsonArray.length();
 
             for( int i=0; i<jsonlength; i++){
                 JSONObject j = jsonArray.getJSONObject(i);
-                contactList.add(new Contact(
-                        j.getString(Contact.KEY_ID),
-                        j.getString(Contact.KEY_NAME),
-                        j.getString(Contact.KEY_TELNUM),
-                        j.getString(Contact.KEY_DESC),
-                        j.getString(Contact.KEY_ADDRESS)
+                dialogList.add(new Dialog(
+                        j.getString(Dialog.KEY_SENDER),
+                        j.getString(Dialog.KEY_RECEIVER),
+                        j.getString(Dialog.KEY_TEXT),
+                        j.getString(Dialog.KEY_TIME)
                 ));
             }
+
 
             Log.d("REST POST", "The response is : " + response);
 
             if(response == 200){
-                ListActivity activity = (ListActivity)context;
-                activity.getSuccss(contactList);
                 returnString = "success";
             }
 

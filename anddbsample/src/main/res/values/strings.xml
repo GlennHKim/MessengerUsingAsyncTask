@@ -20,4 +20,6 @@
     <string name="add_item_msg">추가합니다.</string>
     <string name="cancel_complete">취소</string>
     <string name="complete">완료</string>
+    <string name="send">전송</string>
+    <string name="inputText">입력하세요</string>
 </resources>
