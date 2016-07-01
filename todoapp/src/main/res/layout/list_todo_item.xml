@@ -4,8 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="10px"
-    android:layout_marginBottom="10px">
+    >
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
@@ -19,13 +18,13 @@
         style="@style/TodoStyle"
         android:lines="1"
         app:completeColor="@android:color/holo_green_dark"
-        app:completeWidth="12px"
+        app:completeWidth="6dp"
         />
     <TextView
         android:id="@+id/contentTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24px"
+        android:textSize="16sp"
         android:ellipsize="end"
         android:lines="1"
         android:layout_below="@id/titleTxt"

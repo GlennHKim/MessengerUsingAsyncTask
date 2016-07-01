@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text=""
-        android:layout_weight="4"
+        android:layout_weight="1"
         android:gravity="top|left"/>
 
     <LinearLayout
@@ -23,7 +23,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_vertical|center_horizontal"
-        android:layout_weight="1">
+        >
         <CheckBox
             android:id="@+id/important"
             android:layout_width="wrap_content"

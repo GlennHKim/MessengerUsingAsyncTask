@@ -60,6 +60,7 @@ public class ItemViewActivity extends AppCompatActivity {
                 Toast.makeText(ItemViewActivity.this, "목록 버튼 클릭", Toast.LENGTH_LONG).show();
                 Log.e("ITEM VIEW", "VALS IS SPARTAAAAAAAAAAAAAAAAA!!");
                 Intent intent = new Intent(ItemViewActivity.this, ItemListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });

@@ -70,6 +70,7 @@ public class ItemEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ItemEditActivity.this, ItemListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });
@@ -81,6 +82,7 @@ public class ItemEditActivity extends AppCompatActivity {
                 addItem();
                 //finish();
                 Intent intent = new Intent(ItemEditActivity.this, ItemListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });
