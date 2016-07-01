@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AndroidLab</string>
+    <string name="hello">Hello</string>
+    <string name="hello3">Hola~~</string>
+    <string name="hello2">Aloha~</string>
+    <string name="inputHere">여기에 입력</string>
+    <string name="complete">완료</string>
+</resources>

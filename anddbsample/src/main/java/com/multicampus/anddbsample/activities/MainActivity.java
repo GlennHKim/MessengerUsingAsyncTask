@@ -1,6 +1,9 @@
 package com.multicampus.anddbsample.activities;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -61,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                         edittxtDesc.getText().toString(),
                         edittxtAddress.getText().toString()
                 );
-                contactIf.postContact(contact);
+                contactIf.Join(contact);
             }
         });
 
@@ -73,5 +76,34 @@ public class MainActivity extends AppCompatActivity {
                 contactIf.getContact();
             }
         });
+    }
+
+    public void joinSuccess() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+        dialog.setTitle(R.string.msg_title_join_success)
+                .setMessage(R.string.msg_content_join_success)
+                .setPositiveButton(R.string.btn_confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                        startActivity(intent);
+                    }
+                });
+        dialog.show();
+    }
+
+    public void joinFailure() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+        dialog.setTitle(R.string.msg_title_join_fail)
+                .setMessage(R.string.msg_content_join_fail)
+                .setPositiveButton(R.string.btn_confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        dialog.show();
     }
 }

@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.multicampus.anddbsample.R;
+import com.multicampus.anddbsample.activities.LoginActivity;
+import com.multicampus.anddbsample.activities.MainActivity;
 import com.multicampus.anddbsample.vo.Contact;
 
 import org.json.JSONObject;
@@ -27,11 +29,18 @@ public class ContactInterface {
     public static final String REST_METHOD_POST = "POST";
     public static final String REST_METHOD_DELETE = "DELETE";
     public static final String REST_METHOD_PUT = "PUT";
-
     public static final String REST_API_URL = "http://70.12.108.133:8080/api/contact";
+
+    private static final int NEXT_ACTION_LOGIN = 1;
+    private static final int NEXT_ACTION_FIND = 2;
+    private static final int NEXT_ACTION_UPDATE = 3;
+    private static final int NEXT_ACTION_JOIN = 4;
+
 
     Context context;
     Contact contact;
+
+    int nextStep;
 
     public ContactInterface(Context context){
         this.context = context;
@@ -53,9 +62,16 @@ public class ContactInterface {
 
     }
 
-    public void postContact(Contact contact){
+    public void Join(Contact contact){
         this.contact = contact;
+        nextStep = NEXT_ACTION_JOIN;
         new PostTask().execute(REST_API_URL);
+    }
+
+    public void Login(Contact contact){
+        this.contact = contact;
+        nextStep = NEXT_ACTION_LOGIN;
+        new GetTask().execute(REST_API_URL + "/" + contact.getId());
     }
 
     private class PostTask extends AsyncTask<String, Void, String>{
@@ -76,10 +92,39 @@ public class ContactInterface {
         @Override
         protected String doInBackground(String... params) {
             try{
+                Log.d("REST GET URL", params[0]);
                 return GET(params[0]);
             }catch (IOException e){
                 return "Unable to retreive data. URL may be invalid.";
             }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO: 2016-06-30 성공 시 할 작업
+            Log.d("REST POST", "onPostExecute : " + result);
+            switch(nextStep){
+                case NEXT_ACTION_FIND:
+                    break;
+                case NEXT_ACTION_JOIN:
+                    MainActivity mainActivity = (MainActivity) context;
+                    if(result == "success")
+                        mainActivity.joinSuccess();
+                    else
+                        mainActivity.joinFailure();
+                    break;
+                case NEXT_ACTION_LOGIN:
+                    LoginActivity loginActivity = (LoginActivity) context;
+                    if(result == "success")
+                        loginActivity.loginSuccess();
+                    else
+                        loginActivity.loginFailure();
+                    break;
+                case NEXT_ACTION_UPDATE:
+                    break;
+            }
+
+            // show result
         }
     }
 
@@ -112,6 +157,10 @@ public class ContactInterface {
 
             int response = conn.getResponseCode();
             Log.d("REST POST", "The response is : " + response);
+
+            if(response == 200){
+                returnString = "success";
+            }
         }catch(Exception e){
             Log.e("REST POST", "Error : " + e.getMessage());
         }finally{
@@ -140,6 +189,13 @@ public class ContactInterface {
 
             returnString = convertInputStreamToString(is, length);
             JSONObject json = new JSONObject(returnString);
+
+            Log.d("REST POST", "The response is : " + response);
+            Log.d("REST POST", "Data is : " + json.toString());
+
+            if(response == 200){
+                returnString = "success";
+            }
 
         }catch (Exception e){
             Log.e("REST GET", "Error : "+e.getMessage());

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sample">
+        <item>샘플1-XML</item>
+        <item>샘플2-XML</item>
+    </string-array>
+</resources>

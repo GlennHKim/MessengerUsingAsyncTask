@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">AndDbSample</string>
+    <string name="msg_title_login_fail">로그인 실패</string>
+    <string name="msg_content_login_fail">ID와 이름을 확인하세요.</string>
+    <string name="btn_confirm">확인</string>
+    <string name="msg_title_login_success">로그인 성공</string>
+    <string name="msg_content_login_success">로그인 성공하였습니다.</string>
+    <string name="msg_content_join_fail">가입 실패 하였습니다.</string>
+    <string name="msg_title_join_fail">가입실패</string>
+    <string name="msg_title_join_success">가입성공</string>
+    <string name="msg_content_join_success">가입 성공하였습니다.</string>
+    <string name="addItem">추가</string>
+    <string name="settings">설정</string>
+    <string name="setAccount">계정설정</string>
+    <string name="setConfig">환경설정</string>
+    <string name="exit">종료</string>
+    <string name="share">공유</string>
+    <string name="delete">삭제</string>
+    <string name="add_item_title">추가</string>
+    <string name="add_item_msg">추가합니다.</string>
+    <string name="cancel_complete">취소</string>
+    <string name="complete">완료</string>
 </resources>
